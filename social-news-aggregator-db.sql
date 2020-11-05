@@ -3,14 +3,15 @@
 -- Goal is to create a new schema with given business requirements
 
 CREATE TABLE users (
-    "id" BIGSERIAL PRIMARY KEY COMMENT 'large no of users, quick search on id, reqd for FK ref',
-    "username" VARCHAR(25) NOT NULL CHECK (LENGTH(username)<=25) COMMENT 'username must be unique, max 25 char, not empty'
+    "id" BIGSERIAL PRIMARY KEY COMMENT 'large no of users expected',
+    "username" VARCHAR(25) UNIQUE CHECK (LENGTH(TRIM(username)>0)) COMMENT 'username must be unique, max 25 char, not empty',
+    "last_login" TIMESTAMP 
 );
 
 CREATE TABLE topics (
-    "id" SERIAL,
-    "name" VARCHAR(30) NOT NULL COMMENT 'topic must be unique, max 30 char, not empty' ON DELETE CASCADE,
-    CHECK (LENGTH(name)<=30),
+    "id" SERIAL PRIMARY KEY,
+    "topic_name" VARCHAR(30) UNIQUE COMMENT 'topic must be unique, max 30 char, not empty' ON DELETE CASCADE,
+    CHECK (LENGTH(TRIM(topic_name))>0),
     "description" VARCHAR(500) COMMENT 'optional desc, max 500 char'  
 );
 
@@ -20,8 +21,8 @@ CREATE TABLE posts (
     "content" TEXT,
     "url" VARCHAR,
     "user_id" INTEGER ON DELETE SET NULL
-    CONSTRAINT "url_content_null_check" CHECK (url IS NOT NULL OR content IS NOT NULL)
-
+    CONSTRAINT "url_content_null_check" CHECK ("url" IS NOT NULL OR "content" IS NOT NULL),
+    FOREIGN KEY user_id REFERENCES users (id) 
 );
 
 CREATE TABLE post_comments (
@@ -31,5 +32,12 @@ CREATE TABLE post_comments (
     "user_id" INTEGER REFERENCES users("id"),
     "post_id" INTEGER REFERENCES posts("id"),
     CONSTRAINT "initial_comment" FOREIGN KEY (parent_comment_id) REFERENCES post_comments("id") ON DELETE CASCADE 
+);
+
+CREATE TABLE post_votes (
+    "post_id" BIGINT REFERENCES posts(id),
+    "user_id" BIGINT REFERENCES users(id),
+    "upvote" INT,
+    "downvote" INT 
 );
 
