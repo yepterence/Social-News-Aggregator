@@ -23,7 +23,7 @@ ON sub.id = posts.post_id
 WHERE sub.username = 'Joe'
 LIMIT 20; 
 
--- List all the top-level comments (those that don’t have a parent comment) for a given post.
+-- List all the top-level comments (those that don’t have a parent comment) for a given post. For eg. title = Science
 SELECT comments 
 FROM post_comments 
 JOIN posts 

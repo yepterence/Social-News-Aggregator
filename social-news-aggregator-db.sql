@@ -1,7 +1,7 @@
 -- Author: Terence Yep
 
 -- Goal is to create a new schema that has significant improvements compared to bad-db.sql with given business requirements
-
+BEGIN;
 -- 1. Users table
 CREATE TABLE users (
     "id" BIGSERIAL PRIMARY KEY, 
@@ -32,6 +32,7 @@ CREATE TABLE posts (
     "title" VARCHAR(100) ,
     "content" TEXT,
     "url" VARCHAR,
+    "post_timestamp" TIMESTAMP WITHOUT TIME ZONE,
     "topic_id" INTEGER CONSTRAINT "posts_topic_fk" REFERENCES topics("id") ON DELETE CASCADE,
     "user_id" BIGINT CONSTRAINT "posts_usr_fk" REFERENCES users("id") ON DELETE SET NULL,
     CONSTRAINT "nospaces_non_empty_title" CHECK (LENGTH(TRIM(title))>0),
@@ -69,3 +70,4 @@ CREATE TABLE post_votes (
     CHECK ("vote" = 1 OR "vote" = -1)
 );
 
+END;
