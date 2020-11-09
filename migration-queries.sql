@@ -1,5 +1,5 @@
--- For users table
 BEGIN;
+-- For users table
 -- Populate users table with unique usernames from bad_posts
 INSERT INTO users ("username") 
 SELECT DISTINCT username 
@@ -38,3 +38,29 @@ FROM (
 ) usr_sub
 JOIN bad_comments bc
 ON bc.username = usr_sub.username;
+
+-- Populate votes for all posts by a user by other users
+-- inner join based on the username and then assign a value +1/-1 based on whether its taken from upvotes or downvotes column
+
+-- For all upvotes,select ids that match and assign 1 to upvote column
+INSERT INTO post_votes ("post_id","user_id","vote")
+SELECT bp_u.id, u.id, 1 upvote
+FROM (
+    SELECT id, REGEXP_SPLIT_TO_TABLE(upvotes,',') usernames
+    FROM bad_posts
+)bp_u
+JOIN users u 
+ON u.username=bp_u.usernames;
+
+-- For all downvotes, select ids that match and assign -1 to downvote column
+
+INSERT INTO post_votes ("post_id","user_id","vote")
+SELECT bp_d.id, u.id, -1 AS downvote
+FROM (
+    SELECT id, REGEXP_SPLIT_TO_TABLE(downvotes,',') usernames
+    FROM bad_posts
+)bp_d
+JOIN users u 
+ON u.username=bp_d.usernames;
+
+END;

@@ -1,6 +1,7 @@
 -- Author: Terence Yep
 
 -- Goal is to create a new schema that has significant improvements compared to bad-db.sql with given business requirements
+SET AUTOCOMMIT OFF
 BEGIN;
 -- 1. Users table
 CREATE TABLE users (
@@ -67,7 +68,7 @@ CREATE TABLE post_votes (
     "user_id" BIGINT CONSTRAINT "user_id_idx" REFERENCES users("id") ON DELETE SET NULL,
     CONSTRAINT "post_user_composite_pk" PRIMARY KEY ("post_id", "user_id"),
     "vote" SMALLINT DEFAULT 0,
-    CHECK ("vote" = 1 OR "vote" = -1)
+    CONSTRAINT "up_down_vote_chk" CHECK ("vote" = 1 OR "vote" = -1)
 );
 
 END;
