@@ -54,6 +54,7 @@ CREATE TABLE post_comments (
     "comments" TEXT NOT NULL,
     "user_id" BIGINT CONSTRAINT "user_id_fk" REFERENCES users("id") ON DELETE SET NULL,
     "post_id" INTEGER CONSTRAINT "post_id_fk" REFERENCES posts("id"),
+    CONSTRAINT "non_empty_comments_chk" CHECK (LENGTH(TRIM("comments")) > 0),
     CONSTRAINT "initial_comment" FOREIGN KEY (parent_comment_id) REFERENCES post_comments("id") ON DELETE CASCADE 
 );
 

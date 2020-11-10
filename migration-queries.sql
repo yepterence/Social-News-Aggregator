@@ -6,7 +6,13 @@ SELECT DISTINCT username
 FROM bad_posts 
 UNION 
 SELECT DISTINCT username 
-FROM bad_comments;
+FROM bad_comments
+UNION
+SELECT REGEXP_SPLIT_TO_TABLE(upvotes,',') username
+FROM bad_posts
+UNION
+SELECT REGEXP_SPLIT_TO_TABLE(downvotes,',') username
+FROM bad_posts;
 
 -- Populate topic_name with topics from bad_posts
 INSERT INTO topics ("topic_name") 
