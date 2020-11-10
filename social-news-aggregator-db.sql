@@ -6,7 +6,8 @@ BEGIN;
 -- 1. Users table
 CREATE TABLE users (
     "id" BIGSERIAL PRIMARY KEY, 
-    "username" VARCHAR(25) UNIQUE CHECK(LENGTH(TRIM("username"))>0), 
+    "username" VARCHAR(25) UNIQUE,
+    CHECK(LENGTH(TRIM("username"))>0), 
     "last_login" TIMESTAMP 
 );
 
